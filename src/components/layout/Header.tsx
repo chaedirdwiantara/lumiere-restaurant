@@ -1,24 +1,33 @@
 import { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Phone, MapPin } from 'lucide-react';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
 
   const navItems = [
-    { name: 'Home', href: '#home' },
-    { name: 'Menu', href: '#menu' },
-    { name: 'About', href: '#about' },
-    { name: 'Reservations', href: '#reservations' },
-    { name: 'Contact', href: '#contact' },
+    { name: 'Home', href: '/', isRoute: true },
+    { name: 'Gallery', href: '/gallery', isRoute: true },
+    { name: 'Menu', href: '#menu', isRoute: false },
+    { name: 'About', href: '#about', isRoute: false },
+    { name: 'Reservations', href: '#reservations', isRoute: false },
+    { name: 'Contact', href: '#contact', isRoute: false },
   ];
 
-  const scrollToSection = (href: string) => {
-    const element = document.querySelector(href);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+  const handleNavigation = (item: { name: string; href: string; isRoute: boolean }) => {
+    if (item.isRoute) {
+      // For routes, React Router will handle navigation
+      setIsMenuOpen(false);
+    } else {
+      // For anchor links, scroll to section
+      const element = document.querySelector(item.href);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+      setIsMenuOpen(false);
     }
-    setIsMenuOpen(false);
   };
 
   return (
@@ -42,17 +51,43 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
-            {navItems.map((item) => (
-              <motion.button
-                key={item.name}
-                onClick={() => scrollToSection(item.href)}
-                whileHover={{ y: -2 }}
-                className="text-gray-700 hover:text-gray-900 font-medium transition-colors relative group"
-              >
-                {item.name}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gray-900 transition-all duration-300 group-hover:w-full" />
-              </motion.button>
-            ))}
+            {navItems.map((item) => {
+              const isActive = item.isRoute && location.pathname === item.href;
+              
+              if (item.isRoute) {
+                return (
+                  <Link
+                    key={item.name}
+                    to={item.href}
+                    onClick={() => handleNavigation(item)}
+                  >
+                    <motion.div
+                      whileHover={{ y: -2 }}
+                      className={`font-medium transition-colors relative group ${
+                        isActive ? 'text-gray-900' : 'text-gray-700 hover:text-gray-900'
+                      }`}
+                    >
+                      {item.name}
+                      <span className={`absolute -bottom-1 left-0 h-0.5 bg-gray-900 transition-all duration-300 ${
+                        isActive ? 'w-full' : 'w-0 group-hover:w-full'
+                      }`} />
+                    </motion.div>
+                  </Link>
+                );
+              } else {
+                return (
+                  <motion.button
+                    key={item.name}
+                    onClick={() => handleNavigation(item)}
+                    whileHover={{ y: -2 }}
+                    className="text-gray-700 hover:text-gray-900 font-medium transition-colors relative group"
+                  >
+                    {item.name}
+                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gray-900 transition-all duration-300 group-hover:w-full" />
+                  </motion.button>
+                );
+              }
+            })}
           </nav>
 
           {/* Contact Info & CTA */}
@@ -70,7 +105,7 @@ const Header = () => {
             <motion.button
               whileHover={{ scale: 1.05, y: -1 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => scrollToSection('#reservations')}
+              onClick={() => handleNavigation({ name: 'Reservations', href: '#reservations', isRoute: false })}
               className="bg-gray-900 text-white px-6 py-2 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors"
             >
               Reserve
@@ -103,18 +138,43 @@ const Header = () => {
             className="md:hidden bg-white border-t border-gray-200"
           >
             <div className="px-4 py-6 space-y-4">
-              {navItems.map((item, index) => (
-                <motion.button
-                  key={item.name}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  onClick={() => scrollToSection(item.href)}
-                  className="block w-full text-left text-lg font-medium text-gray-700 hover:text-gray-900 py-2 transition-colors"
-                >
-                  {item.name}
-                </motion.button>
-              ))}
+              {navItems.map((item, index) => {
+                const isActive = item.isRoute && location.pathname === item.href;
+                
+                if (item.isRoute) {
+                  return (
+                    <Link
+                      key={item.name}
+                      to={item.href}
+                      onClick={() => handleNavigation(item)}
+                    >
+                      <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        className={`block w-full text-left text-lg font-medium py-2 transition-colors ${
+                          isActive ? 'text-gray-900' : 'text-gray-700 hover:text-gray-900'
+                        }`}
+                      >
+                        {item.name}
+                      </motion.div>
+                    </Link>
+                  );
+                } else {
+                  return (
+                    <motion.button
+                      key={item.name}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      onClick={() => handleNavigation(item)}
+                      className="block w-full text-left text-lg font-medium text-gray-700 hover:text-gray-900 py-2 transition-colors"
+                    >
+                      {item.name}
+                    </motion.button>
+                  );
+                }
+              })}
               <div className="pt-4 border-t border-gray-200">
                 <div className="flex items-center space-x-2 text-sm text-gray-600 mb-3">
                   <Phone className="w-4 h-4" />
@@ -123,7 +183,7 @@ const Header = () => {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => scrollToSection('#reservations')}
+                  onClick={() => handleNavigation({ name: 'Reservations', href: '#reservations', isRoute: false })}
                   className="w-full bg-gray-900 text-white py-3 rounded-full font-medium hover:bg-gray-800 transition-colors"
                 >
                   Make Reservation
