@@ -87,7 +87,7 @@ export class HomeController {
    * Update home content section
    * PUT /api/home/content/:section
    */
-  async updateContent(req: Request, res: Response): Promise<void> {
+  async updateContentBySection(req: Request, res: Response): Promise<void> {
     try {
       if (!req.admin) {
         res.status(401).json({
@@ -106,40 +106,42 @@ export class HomeController {
       const {
         title,
         subtitle,
-        description,
+        content,
         image_url,
         button_text,
         button_url,
         metadata,
-        is_active
+        is_active,
+        display_order
       } = req.body;
 
       const updateData: any = {};
 
       if (title !== undefined) updateData.title = title;
       if (subtitle !== undefined) updateData.subtitle = subtitle;
-      if (description !== undefined) updateData.description = description;
+      if (content !== undefined) updateData.content = content;
       if (image_url !== undefined) updateData.image_url = image_url;
       if (button_text !== undefined) updateData.button_text = button_text;
       if (button_url !== undefined) updateData.button_url = button_url;
       if (metadata !== undefined) updateData.metadata = metadata;
       if (is_active !== undefined) updateData.is_active = is_active;
+      if (display_order !== undefined) updateData.display_order = parseInt(display_order, 10);
 
       if (Object.keys(updateData).length === 0) {
         throw new ValidationError('No valid fields to update');
       }
 
-      const content = await homeService.updateContent(section, updateData, req.admin.id);
+      const updatedContent = await homeService.updateContent(section, updateData, req.admin.id);
 
-      logger.info('Home content updated successfully', {
+      logger.info('Home content section updated successfully', {
         section,
         adminId: req.admin.id
       });
 
       res.status(200).json({
         success: true,
-        message: 'Home content updated successfully',
-        data: content
+        message: 'Home content section updated successfully',
+        data: updatedContent
       });
     } catch (error) {
       if (error instanceof ValidationError) {
@@ -160,11 +162,11 @@ export class HomeController {
         return;
       }
 
-      logger.error('Update home content controller error', error);
+      logger.error('Update home content by section controller error', error);
       res.status(500).json({
         success: false,
         error: 'Internal Server Error',
-        message: 'Failed to update home content'
+        message: 'Failed to update home content section'
       });
     }
   }
@@ -248,7 +250,7 @@ export class HomeController {
    * Delete home content section
    * DELETE /api/home/content/:section
    */
-  async deleteContent(req: Request, res: Response): Promise<void> {
+  async deleteContentBySection(req: Request, res: Response): Promise<void> {
     try {
       if (!req.admin) {
         res.status(401).json({
@@ -264,16 +266,16 @@ export class HomeController {
         throw new ValidationError('Section key is required');
       }
 
-      await homeService.deleteContent(section, req.admin.id);
+      await homeService.deleteContentBySection(section, req.admin.id);
 
-      logger.info('Home content deleted successfully', {
+      logger.info('Home content section deleted successfully', {
         section,
         adminId: req.admin.id
       });
 
       res.status(200).json({
         success: true,
-        message: 'Home content deleted successfully'
+        message: 'Home content section deleted successfully'
       });
     } catch (error) {
       if (error instanceof ValidationError) {
@@ -294,11 +296,11 @@ export class HomeController {
         return;
       }
 
-      logger.error('Delete home content controller error', error);
+      logger.error('Delete home content by section controller error', error);
       res.status(500).json({
         success: false,
         error: 'Internal Server Error',
-        message: 'Failed to delete home content'
+        message: 'Failed to delete home content section'
       });
     }
   }

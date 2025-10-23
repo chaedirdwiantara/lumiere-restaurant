@@ -153,7 +153,7 @@ export class HomeService {
   /**
    * Delete home content section
    */
-  async deleteContent(sectionKey: string, adminId: string): Promise<void> {
+  async deleteContentBySection(sectionKey: string, adminId: string): Promise<void> {
     try {
       // Check if section exists
       await this.getContentBySection(sectionKey);

@@ -151,10 +151,10 @@ export class GalleryController {
       }
 
       const imageData = {
-        title: title || 'Untitled',
+        title: title || 'Untitled Image',
         description: description || '',
         alt_text: alt_text || title || 'Gallery image',
-        display_order: display_order ? parseInt(display_order, 10) : 0,
+        sort_order: display_order ? parseInt(display_order, 10) : 0,
         is_featured: is_featured === 'true',
         is_active: is_active !== 'false',
         metadata: {}

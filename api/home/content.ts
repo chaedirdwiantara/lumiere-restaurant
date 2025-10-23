@@ -56,7 +56,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       });
 
       // Update home content
-      await homeController.updateContent(req as any, res as any);
+      await homeController.updateContentBySection(req as any, res as any);
     } catch (error) {
       console.error('Home content PUT API error:', error);
       

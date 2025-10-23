@@ -310,7 +310,7 @@ router.post('/content',
  */
 router.put('/content/:section', 
   authenticateToken,
-  homeController.updateContent.bind(homeController)
+  homeController.updateContentBySection.bind(homeController)
 );
 
 /**
@@ -368,7 +368,7 @@ router.put('/content/:section',
  */
 router.delete('/content/:section', 
   authenticateToken,
-  homeController.deleteContent.bind(homeController)
+  homeController.deleteContentBySection.bind(homeController)
 );
 
 /**
