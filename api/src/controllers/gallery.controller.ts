@@ -154,7 +154,7 @@ export class GalleryController {
         title: title || 'Untitled',
         description: description || '',
         alt_text: alt_text || title || 'Gallery image',
-        sort_order: display_order ? parseInt(display_order, 10) : 0,
+        display_order: display_order ? parseInt(display_order, 10) : 0,
         is_featured: is_featured === 'true',
         is_active: is_active !== 'false',
         metadata: {}
