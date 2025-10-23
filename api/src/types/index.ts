@@ -146,6 +146,11 @@ export interface AuthTokens {
   refreshToken: string;
 }
 
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
 // Request Types
 export interface AuthenticatedRequest extends Request {
   user?: JWTPayload;
@@ -179,6 +184,15 @@ export interface UploadedFile {
   size: number;
 }
 
+export interface FileUpload {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  buffer: Buffer;
+  size: number;
+}
+
 export interface ProcessedImage {
   original: {
     url: string;
@@ -188,23 +202,14 @@ export interface ProcessedImage {
     format: string;
     buffer: Buffer;
   };
-  optimized?: {
-    url: string;
+  variants: Record<string, {
+    buffer: Buffer;
     width: number;
     height: number;
     size: number;
     format: string;
-    buffer: Buffer;
-  };
-  thumbnail: {
-    url: string;
-    width: number;
-    height: number;
-    size: number;
-    format: string;
-    buffer: Buffer;
-  };
-  variants: ImageVariant[];
+    url?: string;
+  }> | ImageVariant[];
 }
 
 // Error Types

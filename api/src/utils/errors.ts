@@ -24,9 +24,19 @@ export class CustomError extends Error implements AppError {
 
 // Specific error classes
 export class ValidationError extends CustomError {
-  constructor(message: string, code?: string) {
-    super(message, 400, true, code || 'VALIDATION_ERROR');
+  constructor(message: string, details?: string | ValidationErrorDetail[]) {
+    const code = typeof details === 'string' ? details : 'VALIDATION_ERROR';
+    super(message, 400, true, code);
+    if (Array.isArray(details)) {
+      this.details = details;
+    }
   }
+  public readonly details?: ValidationErrorDetail[];
+}
+
+export interface ValidationErrorDetail {
+  field: string;
+  message: string;
 }
 
 export class AuthenticationError extends CustomError {

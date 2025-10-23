@@ -155,28 +155,30 @@ export const validateFileUpload = (req: Request, res: Response, next: NextFuncti
       throw new ValidationError('No file uploaded');
     }
     
-    const file = req.file || (Array.isArray(req.files) ? req.files[0] : req.files);
+    const file = req.file || (Array.isArray(req.files) ? req.files[0] : Object.values(req.files || {})[0]);
     
-    if (!file) {
+    if (!file || Array.isArray(file)) {
       throw new ValidationError('No valid file found in request');
     }
     
     // Validate file size (already handled by multer, but double-check)
     const maxSize = parseInt(process.env.MAX_FILE_SIZE || '10485760'); // 10MB default
-    if (file.size > maxSize) {
+    const fileSize = typeof file.size === 'number' ? file.size : 0;
+    if (fileSize > maxSize) {
       throw new ValidationError(`File size exceeds maximum allowed size of ${maxSize} bytes`);
     }
     
     // Validate file type
     const allowedTypes = (process.env.ALLOWED_FILE_TYPES || 'image/jpeg,image/png,image/webp').split(',');
-    if (!allowedTypes.includes(file.mimetype)) {
-      throw new ValidationError(`File type ${file.mimetype} is not allowed. Allowed types: ${allowedTypes.join(', ')}`);
+    const fileMimetype = typeof file.mimetype === 'string' ? file.mimetype : '';
+    if (!allowedTypes.includes(fileMimetype)) {
+      throw new ValidationError(`File type ${fileMimetype} is not allowed. Allowed types: ${allowedTypes.join(', ')}`);
     }
     
     logger.info('File upload validation passed', {
       filename: file.originalname,
-      mimetype: file.mimetype,
-      size: file.size
+      mimetype: fileMimetype,
+      size: fileSize
     });
     
     next();

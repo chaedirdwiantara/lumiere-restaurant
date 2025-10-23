@@ -202,12 +202,13 @@ export class HomeController {
 
       const contentData = {
         section_key,
-        title: title || null,
+        title,
         subtitle: subtitle || null,
         description: description || null,
         image_url: image_url || null,
         button_text: button_text || null,
         button_url: button_url || null,
+        display_order: 0,
         metadata,
         is_active
       };

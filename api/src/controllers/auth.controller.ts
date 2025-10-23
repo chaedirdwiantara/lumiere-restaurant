@@ -22,8 +22,7 @@ export class AuthController {
       const tokens = await authService.login({ email, password });
 
       logger.info('Admin login successful', { 
-        email,
-        adminId: tokens.admin.id 
+        email
       });
 
       res.status(200).json({
@@ -74,9 +73,7 @@ export class AuthController {
       // Refresh tokens
       const tokens = await authService.refreshToken(refreshToken);
 
-      logger.info('Token refresh successful', { 
-        adminId: tokens.admin.id 
-      });
+      logger.info('Token refresh successful');
 
       res.status(200).json({
         success: true,

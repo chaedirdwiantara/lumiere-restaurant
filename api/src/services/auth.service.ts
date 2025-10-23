@@ -4,7 +4,7 @@ import { supabaseService } from '../config/database';
 import { config } from '../config';
 import { AuthenticationError, ValidationError } from '../utils/errors';
 import { logger } from '../utils/logger';
-import type { Admin, LoginCredentials, AuthTokens, JWTPayload } from '../types';
+import type { Admin, AuthTokens, JWTPayload, LoginCredentials } from '../types';
 
 export class AuthService {
   private readonly saltRounds = 12;
@@ -71,7 +71,7 @@ export class AuthService {
       const { data: admin, error } = await supabaseService
         .from('admins')
         .select('*')
-        .eq('id', payload.adminId)
+        .eq('id', payload.id)
         .eq('is_active', true)
         .single();
 
@@ -101,7 +101,7 @@ export class AuthService {
       const { data: admin, error } = await supabaseService
         .from('admins')
         .select('*')
-        .eq('id', payload.adminId)
+        .eq('id', payload.id)
         .eq('is_active', true)
         .single();
 
@@ -217,29 +217,22 @@ export class AuthService {
    */
   private generateTokens(admin: Admin): AuthTokens {
     const payload: JWTPayload = {
-      adminId: admin.id,
+      id: admin.id,
       email: admin.email,
       role: admin.role
     };
 
     const accessToken = jwt.sign(payload, config.jwt.secret, {
-      expiresIn: config.jwt.expiresIn
-    });
+      expiresIn: config.jwt.expiresIn as string
+    } as jwt.SignOptions);
 
     const refreshToken = jwt.sign(payload, config.jwt.refreshSecret, {
-      expiresIn: config.jwt.refreshExpiresIn
-    });
+      expiresIn: config.jwt.refreshExpiresIn as string
+    } as jwt.SignOptions);
 
     return {
       accessToken,
-      refreshToken,
-      expiresIn: config.jwt.expiresIn,
-      admin: {
-        id: admin.id,
-        email: admin.email,
-        name: admin.name,
-        role: admin.role
-      }
+      refreshToken
     };
   }
 }

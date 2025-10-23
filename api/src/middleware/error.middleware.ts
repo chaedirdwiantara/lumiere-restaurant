@@ -6,8 +6,7 @@ import {
   NotFoundError, 
   ConflictError, 
   FileUploadError,
-  DatabaseError,
-  ExternalServiceError 
+  DatabaseError
 } from '../utils/errors';
 import { logger } from '../utils/logger';
 
@@ -111,7 +110,6 @@ export const errorHandler = (
     errorResponse.error = {
       message: error.message,
       code: 'CONFLICT_ERROR',
-      details: error.details,
       timestamp,
       path,
       method
@@ -121,7 +119,6 @@ export const errorHandler = (
     errorResponse.error = {
       message: error.message,
       code: 'FILE_UPLOAD_ERROR',
-      details: error.details,
       timestamp,
       path,
       method
@@ -135,15 +132,7 @@ export const errorHandler = (
       path,
       method
     };
-  } else if (error instanceof ExternalServiceError) {
-    statusCode = 502;
-    errorResponse.error = {
-      message: 'External service error',
-      code: 'EXTERNAL_SERVICE_ERROR',
-      timestamp,
-      path,
-      method
-    };
+
   } else if (error.name === 'MulterError') {
     statusCode = 400;
     let message = 'File upload error';
