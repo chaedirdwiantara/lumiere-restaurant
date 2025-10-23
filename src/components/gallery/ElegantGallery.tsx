@@ -1,6 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useGallery } from '../../hooks/useGallery'
+import { GalleryService } from '../../services/galleryService'
+import type { GalleryImage as ApiGalleryImage } from '../../types/api'
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger)
@@ -16,12 +19,67 @@ interface GalleryImage {
 interface ElegantGalleryProps {
   images?: GalleryImage[]
   onImageSelect?: (image: GalleryImage) => void
+  category?: string
+  featured?: boolean
 }
 
 const ElegantGallery: React.FC<ElegantGalleryProps> = ({ 
-  images = defaultImages, 
-  onImageSelect 
+  images: propImages, 
+  onImageSelect,
+  category,
+  featured = false
 }) => {
+  // Use API data if no images provided via props
+  const { images: apiImages, loading, error, retry, refresh, isOnline } = useGallery({ 
+    category, 
+    featured,
+    autoRefresh: true,
+    refreshInterval: 30000 // Refresh every 30 seconds
+  })
+
+  // Transform API images to component format
+  const transformApiImages = (apiImages: ApiGalleryImage[]): GalleryImage[] => {
+    console.log('🔄 Transforming API images:', apiImages.length);
+    
+    return apiImages.map((image) => {
+      console.log('📸 Processing image:', {
+        id: image.id,
+        title: image.title,
+        hasImageVariants: !!image.image_variants,
+        hasVariants: !!image.variants,
+        imageVariantsCount: image.image_variants?.length || 0,
+        variantsCount: image.variants?.length || 0
+      });
+
+      // Log the full structure of image_variants
+      console.log('🔍 Full image_variants structure:', JSON.stringify(image.image_variants, null, 2));
+      console.log('🔍 Full variants structure:', JSON.stringify(image.variants, null, 2));
+      console.log('🔍 Full image object:', JSON.stringify(image, null, 2));
+
+      // Get the optimized URL for display
+      const imageUrl = GalleryService.getOptimizedImageUrl(image, 'original');
+      
+      console.log('🖼️ Selected image URL:', {
+        id: image.id,
+        title: image.title,
+        imageUrl,
+        urlLength: imageUrl.length,
+        isValidUrl: imageUrl.length > 0
+      });
+
+      return {
+        id: image.id,
+        title: image.title || 'Untitled',
+        description: image.description || '',
+        imageUrl,
+        category: image.category || 'general'
+      };
+    });
+  };
+  
+  // Use prop images or API images or fallback
+  const images = propImages || 
+    (apiImages.length > 0 ? transformApiImages(apiImages) : defaultImages)
   const containerRef = useRef<HTMLDivElement>(null)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const autoScrollInterval = useRef<NodeJS.Timeout | null>(null)
@@ -284,6 +342,29 @@ const ElegantGallery: React.FC<ElegantGalleryProps> = ({
           <span className="block text-amber-400 font-extralight italic">Excellence</span>
         </h1>
         <div className="w-24 h-px bg-gradient-to-r from-amber-400 to-transparent mt-6" />
+        
+        {/* Loading/Error States */}
+        {loading && (
+          <div className="mt-4 text-sm text-white/60 font-light">
+            Loading gallery images...
+          </div>
+        )}
+        {error && !isOnline && (
+          <div className="mt-4 text-sm text-red-400 font-light">
+            Offline - Showing cached images
+          </div>
+        )}
+        {error && isOnline && (
+          <div className="mt-4 text-sm text-red-400 font-light">
+            <span>Failed to load images</span>
+            <button 
+              onClick={retry}
+              className="ml-2 text-amber-400 hover:text-amber-300 underline"
+            >
+              Retry
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Gallery Container */}

@@ -5,7 +5,10 @@ import { ArrowRight, Star, Clock, Users } from 'lucide-react';
 import { CircularScrollIndicator } from '../components/ui/CircularScrollIndicator';
 import { HorizontalCarousel } from '../components/ui/HorizontalCarousel';
 import { InteractiveCard } from '../components/ui/InteractiveCard';
+import { ErrorBoundary, ApiErrorDisplay } from '../components/ui/ErrorBoundary';
+import { ContentSkeleton } from '../components/ui/LoadingSkeleton';
 import useScrollAnimations from '../hooks/useScrollAnimations';
+import { useHomeContent } from '../hooks/useHomeContent';
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -23,6 +26,27 @@ const Home = () => {
     morphingText,
     elasticScale
   } = useScrollAnimations();
+
+  // Fetch dynamic content from backend
+  const { 
+    content, 
+    loading, 
+    error, 
+    isOnline, 
+    getSection, 
+    getSectionItems, 
+    retry 
+  } = useHomeContent({
+    autoRefresh: true,
+    refreshInterval: 120000 // Refresh every 2 minutes
+  });
+
+  // Get content sections
+  const heroContent = getSection('hero');
+  const aboutContent = getSection('about');
+  const ctaContent = getSection('cta');
+  const featuresContent = getSectionItems('features');
+  const testimonialsContent = getSectionItems('testimonials');
 
   // Mock data for carousel
   const featuredDishes = [
@@ -151,8 +175,9 @@ const Home = () => {
   }, [cinematicReveal, staggerAnimation, morphingText, elasticScale, parallaxEffect]);
 
   return (
-    <div className="min-h-screen bg-cinema-black text-white overflow-hidden">
-      <CircularScrollIndicator />
+    <ErrorBoundary>
+      <div className="min-h-screen bg-cinema-black text-white overflow-hidden">
+        <CircularScrollIndicator />
       
       {/* Hero Section - Asymmetrical Layout */}
       <section ref={heroRef} className="relative min-h-screen flex items-center">
@@ -198,16 +223,45 @@ const Home = () => {
               <h1 
                 className="font-display text-hero font-extralight mb-8 text-shadow-cinematic morphing-text"
               >
-                LUMIÈRE
+                {heroContent?.title || 'LUMIÈRE'}
               </h1>
 
               {/* Subtitle */}
               <p 
                 className="text-lg font-light tracking-wide mb-12 max-w-md leading-relaxed text-white/80 cinematic-reveal"
               >
-                CULINARY ARTISTRY MEETS<br />
-                CINEMATIC ELEGANCE
+                {heroContent?.subtitle || 'CULINARY ARTISTRY MEETS CINEMATIC ELEGANCE'}
               </p>
+
+              {/* Dynamic Content */}
+              {heroContent?.content && (
+                <p className="text-base font-light text-white/70 mb-8 max-w-lg leading-relaxed cinematic-reveal">
+                  {heroContent.content}
+                </p>
+              )}
+
+              {/* Loading/Error States */}
+              {loading && (
+                <div className="text-sm text-white/60 font-light mb-4">
+                  Loading content...
+                </div>
+              )}
+              {error && !isOnline && (
+                <div className="text-sm text-amber-400 font-light mb-4">
+                  Offline - Showing cached content
+                </div>
+              )}
+              {error && isOnline && (
+                <div className="text-sm text-red-400 font-light mb-4">
+                  <span>Failed to load content</span>
+                  <button 
+                    onClick={retry}
+                    className="ml-2 text-amber-400 hover:text-amber-300 underline"
+                  >
+                    Retry
+                  </button>
+                </div>
+              )}
 
               {/* Action Button */}
               <button 
@@ -253,20 +307,25 @@ const Home = () => {
       <section className="py-32 bg-gradient-to-b from-cinema-charcoal/30 to-cinema-black">
         <div className="max-w-7xl mx-auto px-8 lg:px-16">
           {/* Section Header */}
-          <div className="text-center mb-20 cinematic-reveal">
-            <p className="text-xs font-light tracking-[0.3em] uppercase text-cinema-gold mb-6">
-              OUR PHILOSOPHY
-            </p>
-            <h2 className="font-display text-display font-extralight mb-8 text-shadow-cinematic morphing-text">
-              CULINARY
-              <br />
-              <span className="text-cinema-gold">EXCELLENCE</span>
-            </h2>
-            <p className="text-lg font-light text-white/80 max-w-2xl mx-auto leading-relaxed">
-              At Lumière, we believe that dining is an art form. Each dish is meticulously crafted 
-              to tell a story, evoke emotions, and create lasting memories.
-            </p>
-          </div>
+          {loading && !aboutContent ? (
+            <ContentSkeleton type="about" />
+          ) : error && !aboutContent ? (
+            <ApiErrorDisplay error={error} onRetry={retry} />
+          ) : (
+            <div className="text-center mb-20 cinematic-reveal">
+              <p className="text-xs font-light tracking-[0.3em] uppercase text-cinema-gold mb-6">
+                OUR PHILOSOPHY
+              </p>
+              <h2 className="font-display text-display font-extralight mb-8 text-shadow-cinematic morphing-text">
+                {aboutContent?.title || 'CULINARY'}
+                <br />
+                <span className="text-cinema-gold">EXCELLENCE</span>
+              </h2>
+              <p className="text-lg font-light text-white/80 max-w-2xl mx-auto leading-relaxed">
+                {aboutContent?.content || 'At Lumière, we believe that dining is an art form. Each dish is meticulously crafted to tell a story, evoke emotions, and create lasting memories.'}
+              </p>
+            </div>
+          )}
 
           {/* Interactive Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
@@ -335,25 +394,35 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
-              <div
-                key={index}
-                className="text-center group stagger-item"
-                data-cursor="hover"
-              >
-                <div className="w-16 h-16 bg-cinema-gold/10 border border-cinema-gold/30 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-cinema-gold/20 group-hover:border-cinema-gold transition-all duration-500">
-                  <feature.icon className="w-8 h-8 text-cinema-gold" />
+          {loading && featuresContent.length === 0 ? (
+            <ContentSkeleton type="features" />
+          ) : error && featuresContent.length === 0 ? (
+            <ApiErrorDisplay error={error} onRetry={retry} />
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {(featuresContent.length > 0 ? featuresContent : features).map((feature, index) => (
+                <div
+                  key={index}
+                  className="text-center group stagger-item"
+                  data-cursor="hover"
+                >
+                  <div className="w-16 h-16 bg-cinema-gold/10 border border-cinema-gold/30 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-cinema-gold/20 group-hover:border-cinema-gold transition-all duration-500">
+                    {feature.icon ? (
+                      <feature.icon className="w-8 h-8 text-cinema-gold" />
+                    ) : (
+                      <Star className="w-8 h-8 text-cinema-gold" />
+                    )}
+                  </div>
+                  <h3 className="font-display text-xl font-light mb-4 text-shadow-cinematic">
+                    {feature.title}
+                  </h3>
+                  <p className="text-white/70 leading-relaxed font-light">
+                    {feature.content || feature.description}
+                  </p>
                 </div>
-                <h3 className="font-display text-xl font-light mb-4 text-shadow-cinematic">
-                  {feature.title}
-                </h3>
-                <p className="text-white/70 leading-relaxed font-light">
-                  {feature.description}
-                </p>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -380,14 +449,14 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
+            {(testimonialsContent.length > 0 ? testimonialsContent : testimonials).map((testimonial, index) => (
               <div
                 key={index}
                 className="bg-cinema-charcoal/20 backdrop-blur-sm p-8 rounded-lg cinematic-border stagger-item"
                 data-cursor="hover"
               >
                 <div className="flex mb-6">
-                  {[...Array(testimonial.rating)].map((_, i) => (
+                  {[...Array(testimonial.rating || 5)].map((_, i) => (
                     <Star key={i} className="w-4 h-4 text-cinema-gold fill-current" />
                   ))}
                 </div>
@@ -395,8 +464,8 @@ const Home = () => {
                   "{testimonial.content}"
                 </p>
                 <div className="border-t border-white/10 pt-4">
-                  <p className="font-display font-light text-white text-lg">{testimonial.name}</p>
-                  <p className="text-cinema-gold text-xs font-light tracking-[0.2em] uppercase">{testimonial.role}</p>
+                  <p className="font-display font-light text-white text-lg">{testimonial.title || testimonial.name}</p>
+                  <p className="text-cinema-gold text-xs font-light tracking-[0.2em] uppercase">{testimonial.subtitle || testimonial.role}</p>
                 </div>
               </div>
             ))}
@@ -413,12 +482,12 @@ const Home = () => {
               CULINARY EXCELLENCE
             </p>
             <h2 className="font-display text-display font-extralight mb-8 text-shadow-cinematic morphing-text">
-              EXPERIENCE
+              {ctaContent?.title || 'EXPERIENCE'}
               <br />
-              <span className="text-cinema-gold">PERFECTION</span>
+              <span className="text-cinema-gold">{ctaContent?.subtitle || 'PERFECTION'}</span>
             </h2>
             <p className="text-lg font-light text-white/80 mb-12 max-w-2xl mx-auto leading-relaxed">
-              Reserve your table today and embark on an unforgettable gastronomic journey
+              {ctaContent?.content || 'Reserve your table today and embark on an unforgettable gastronomic journey'}
             </p>
             <button
               className="group relative bg-cinema-gold text-cinema-black px-12 py-4 rounded-sm font-light text-lg tracking-[0.1em] uppercase transition-all duration-500 hover:bg-white hover:shadow-2xl hover:shadow-cinema-gold/20"
@@ -430,7 +499,8 @@ const Home = () => {
           </div>
         </div>
       </section>
-    </div>
+      </div>
+    </ErrorBoundary>
   );
 };
 

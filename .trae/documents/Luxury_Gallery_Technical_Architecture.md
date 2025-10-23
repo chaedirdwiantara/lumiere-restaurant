@@ -47,25 +47,30 @@ graph TD
 
 ## 2. Technology Description
 
-- Frontend: React@18 + TypeScript + Vite + Tailwind CSS@3
-- Animation: GSAP@3.12 + ScrollTrigger + Draggable
-- Smooth Scroll: Lenis@1.0
-- State Management: React Hooks (useState, useEffect, useRef)
-- Performance: React.memo + useMemo + useCallback optimizations
+* Frontend: React\@18 + TypeScript + Vite + Tailwind CSS\@3
+
+* Animation: GSAP\@3.12 + ScrollTrigger + Draggable
+
+* Smooth Scroll: Lenis\@1.0
+
+* State Management: React Hooks (useState, useEffect, useRef)
+
+* Performance: React.memo + useMemo + useCallback optimizations
 
 ## 3. Route Definitions
 
-| Route | Purpose |
-|-------|---------|
-| /gallery | Main gallery page with Footage and Poster modes |
-| /gallery/footage | Direct access to Footage mode (optional) |
-| /gallery/poster | Direct access to Poster mode (optional) |
+| Route            | Purpose                                         |
+| ---------------- | ----------------------------------------------- |
+| /gallery         | Main gallery page with Footage and Poster modes |
+| /gallery/footage | Direct access to Footage mode (optional)        |
+| /gallery/poster  | Direct access to Poster mode (optional)         |
 
 ## 4. Component Architecture
 
 ### 4.1 Core Components
 
 **LuxuryGallery Component**
+
 ```typescript
 interface LuxuryGalleryProps {
   images: GalleryImage[]
@@ -75,6 +80,7 @@ interface LuxuryGalleryProps {
 ```
 
 **FootageMode Component**
+
 ```typescript
 interface FootageModeProps {
   images: GalleryImage[]
@@ -84,6 +90,7 @@ interface FootageModeProps {
 ```
 
 **PosterMode Component**
+
 ```typescript
 interface PosterModeProps {
   images: GalleryImage[]
@@ -95,6 +102,7 @@ interface PosterModeProps {
 ### 4.2 Animation Hooks
 
 **useElasticDrag Hook**
+
 ```typescript
 interface ElasticDragOptions {
   elasticity: number
@@ -111,6 +119,7 @@ const useElasticDrag = (
 ```
 
 **useProgressiveBlur Hook**
+
 ```typescript
 interface ProgressiveBlurOptions {
   blurRadius: number
@@ -129,6 +138,7 @@ const useProgressiveBlur = (
 ## 5. Animation Specifications
 
 ### 5.1 Elastic Drag Animation
+
 ```typescript
 // GSAP Timeline for elastic drag effect
 const createElasticDragAnimation = (element: HTMLElement) => {
@@ -155,6 +165,7 @@ const createElasticDragAnimation = (element: HTMLElement) => {
 ```
 
 ### 5.2 Progressive Blur Effect
+
 ```typescript
 // CSS-in-JS for progressive blur
 const progressiveBlurStyles = {
@@ -171,6 +182,7 @@ const progressiveBlurStyles = {
 ```
 
 ### 5.3 Opposite Direction Scrolling (Poster Mode)
+
 ```typescript
 // GSAP ScrollTrigger for opposite scrolling
 const setupOppositeScrolling = (topRow: HTMLElement, bottomRow: HTMLElement) => {
@@ -277,19 +289,32 @@ interface AnimationConfig {
 ## 7. Performance Optimizations
 
 ### 7.1 Image Loading Strategy
-- **Lazy loading** dengan Intersection Observer API
-- **Progressive image loading** dengan placeholder blur
-- **WebP format** dengan fallback ke JPEG
-- **Responsive images** dengan srcset untuk different screen sizes
+
+* **Lazy loading** dengan Intersection Observer API
+
+* **Progressive image loading** dengan placeholder blur
+
+* **WebP format** dengan fallback ke JPEG
+
+* **Responsive images** dengan srcset untuk different screen sizes
 
 ### 7.2 Animation Performance
-- **GPU acceleration** dengan transform3d dan will-change properties
-- **RequestAnimationFrame** untuk smooth 60fps animations
-- **Debounced scroll events** untuk optimal performance
-- **Memory management** dengan proper cleanup di useEffect
+
+* **GPU acceleration** dengan transform3d dan will-change properties
+
+* **RequestAnimationFrame** untuk smooth 60fps animations
+
+* **Debounced scroll events** untuk optimal performance
+
+* **Memory management** dengan proper cleanup di useEffect
 
 ### 7.3 Bundle Optimization
-- **Code splitting** untuk gallery components
-- **Dynamic imports** untuk mode-specific components
-- **Tree shaking** untuk unused GSAP plugins
-- **Image optimization** dengan Vite asset processing
+
+* **Code splitting** untuk gallery components
+
+* **Dynamic imports** untuk mode-specific components
+
+* **Tree shaking** untuk unused GSAP plugins
+
+* **Image optimization** dengan Vite asset processing
+

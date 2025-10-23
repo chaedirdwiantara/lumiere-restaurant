@@ -22,6 +22,10 @@
 
 * {
   box-sizing: border-box;
+}
+
+/* Hide custom cursor only for non-admin routes */
+body:not(.admin-route) * {
   cursor: none; /* Hide default cursor for custom cursor */
 }
 
