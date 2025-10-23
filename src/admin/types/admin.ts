@@ -207,7 +207,7 @@ export interface ApiError {
 
 // UI Component Types
 export interface ButtonProps {
-  variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'outline';
   size?: 'sm' | 'md' | 'lg';
   loading?: boolean;
   disabled?: boolean;
@@ -217,7 +217,7 @@ export interface ButtonProps {
   className?: string;
 }
 
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
   label?: string;
   error?: string;
   helperText?: string;
@@ -226,7 +226,7 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
   placeholder?: string;
   type?: 'text' | 'email' | 'password' | 'number' | 'url';
   value?: string;
-  onChange?: (value: string) => void;
+  onChange?: ((value: string) => void) | ((event: React.ChangeEvent<HTMLInputElement>) => void);
   className?: string;
 }
 
@@ -243,15 +243,18 @@ export interface ModalProps {
 
 export interface TableColumn<T> {
   key: keyof T;
+  title: string;
   label: string;
   sortable?: boolean;
-  render?: (value: any, item: T) => React.ReactNode;
+  render?: (value: any, item: T, index?: number) => React.ReactNode;
 }
 
 export interface TableProps<T> {
   data: T[];
   columns: TableColumn<T>[];
   loading?: boolean;
+  emptyMessage?: string;
+  className?: string;
   onSort?: (key: keyof T, direction: 'asc' | 'desc') => void;
   onRowClick?: (item: T) => void;
   selectedItems?: T[];

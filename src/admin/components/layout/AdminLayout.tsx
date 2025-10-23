@@ -22,13 +22,9 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
         <Header />
         
         {/* Page Content */}
-        <main className="flex-1 overflow-y-auto bg-gray-950 p-6" style={{backgroundColor: 'purple'}}>
+        <main className="flex-1 overflow-y-auto bg-gray-950 p-6">
           <div className="max-w-7xl mx-auto">
-            {console.log('🔥 Rendering children in AdminLayout:', children)}
-            <div style={{backgroundColor: 'orange', minHeight: '200px', padding: '20px'}}>
-              <p style={{color: 'white'}}>AdminLayout Content Wrapper</p>
-              {children}
-            </div>
+            {children}
           </div>
         </main>
       </div>

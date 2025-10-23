@@ -146,7 +146,7 @@ const ContentPreview: React.FC<ContentPreviewProps> = ({
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .prose h1 {
           font-size: 2.25rem;
           font-weight: 800;

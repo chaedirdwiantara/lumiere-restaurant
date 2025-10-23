@@ -8,8 +8,22 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
   className = '',
   required = false,
   disabled = false,
+  onChange,
   ...props
 }, ref) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Support both react-hook-form onChange and custom onChange
+    if (onChange) {
+      // Check if onChange expects a string or an event
+      if (onChange.length === 1) {
+        // Assume it expects a string value
+        (onChange as (value: string) => void)(e.target.value);
+      } else {
+        // Assume it expects an event
+        (onChange as (event: React.ChangeEvent<HTMLInputElement>) => void)(e);
+      }
+    }
+  };
   const inputClasses = `
     w-full px-4 py-3 bg-gray-800 border rounded-lg text-white placeholder-gray-400
     transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900
@@ -34,6 +48,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(({
         className={inputClasses}
         disabled={disabled}
         {...props}
+        onChange={handleChange}
       />
       {error && (
         <p className="text-sm text-red-400 flex items-center">

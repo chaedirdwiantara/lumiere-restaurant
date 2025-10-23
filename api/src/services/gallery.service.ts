@@ -350,13 +350,13 @@ export class GalleryService {
             size: file.size,
             format: file.mimetype?.split('/')[1] || 'jpeg'
           },
-          variants: {} // Empty variants - will use original for all sizes
+          variants: [] // Empty variants - will use original for all sizes
         };
       }
       
 
 
-      const variants: Record<string, { buffer: Buffer; width: number; height: number; size: number; format: string }> = {};
+      const variants: Record<string, { buffer: Buffer; width: number; height: number; size: number; format: string; url?: string }> = {};
 
       // Thumbnail (300x300)
       logger.info('Processing thumbnail variant...');
@@ -437,7 +437,8 @@ export class GalleryService {
           width: metadata.width || 0,
           height: metadata.height || 0,
           size: file.size,
-          format: metadata.format || 'jpeg'
+          format: metadata.format || 'jpeg',
+          url: ''
         },
         variants
       };
@@ -477,7 +478,7 @@ export class GalleryService {
     processedImages: ProcessedImage,
     originalName: string
   ): Promise<{
-    original: { url: string };
+    original: { url: string; width: number; height: number; size: number; format: string; buffer: Buffer };
     variants: Record<string, { url: string; width: number; height: number; size: number; format: string }>;
   }> {
     try {
@@ -517,7 +518,14 @@ export class GalleryService {
         .from(this.bucketName)
         .getPublicUrl(originalPath);
 
-      results.original = { url: originalUrl.publicUrl };
+      results.original = { 
+        url: originalUrl.publicUrl,
+        width: processedImages.original.width,
+        height: processedImages.original.height,
+        size: processedImages.original.size,
+        format: processedImages.original.format,
+        buffer: processedImages.original.buffer
+      };
 
       // Upload variants
       for (const [variantType, variantData] of Object.entries(processedImages.variants)) {

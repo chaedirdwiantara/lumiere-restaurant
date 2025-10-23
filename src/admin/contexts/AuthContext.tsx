@@ -5,6 +5,7 @@ interface Admin {
   id: string;
   email: string;
   name: string;
+  role: 'admin' | 'super_admin';
 }
 
 interface LoginCredentials {
@@ -57,7 +58,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const adminData: Admin = {
         id: data.data.admin.id,
         email: data.data.admin.email,
-        name: data.data.admin.name || 'Admin'
+        name: data.data.admin.name || 'Admin',
+        role: data.data.admin.role || 'admin'
       };
 
       setAdmin(adminData);
@@ -134,7 +136,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const adminData: Admin = {
         id: data.data.admin.id,
         email: data.data.admin.email,
-        name: data.data.admin.name || 'Admin'
+        name: data.data.admin.name || 'Admin',
+        role: data.data.admin.role || 'admin'
       };
 
       setAdmin(adminData);

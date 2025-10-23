@@ -1,4 +1,4 @@
-import { AppError } from '@/types';
+import { AppError } from '../types';
 
 export class CustomError extends Error implements AppError {
   public readonly statusCode: number;

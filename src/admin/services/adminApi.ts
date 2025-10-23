@@ -96,12 +96,12 @@ class AdminApiService {
       }
       
       // Ensure consistent response structure
-      const result = {
-        success: data.success || true,
-        data: data.data || [],
-        images: data.data || [], // Add images property for backward compatibility
-        pagination: data.pagination || null,
-        message: data.message || 'Images retrieved successfully'
+      const result: GalleryResponse = {
+        images: data.data || [],
+        total: data.pagination?.total || data.data?.length || 0,
+        page: data.pagination?.page || 1,
+        limit: data.pagination?.limit || 20,
+        totalPages: data.pagination?.total_pages || Math.ceil((data.pagination?.total || data.data?.length || 0) / (data.pagination?.limit || 20))
       };
       
       console.log('📤 Returning structured response:', result);

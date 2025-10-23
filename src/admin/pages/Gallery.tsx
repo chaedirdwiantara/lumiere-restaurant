@@ -77,10 +77,7 @@ const Gallery: React.FC = () => {
       console.log('API Response:', response);
       
       // Check if response has the correct structure
-      if (response && response.data && Array.isArray(response.data)) {
-        setImages(response.data);
-        console.log(`✅ Loaded ${response.data.length} images from API`);
-      } else if (response && response.images && Array.isArray(response.images)) {
+      if (response && response.images && Array.isArray(response.images)) {
         setImages(response.images);
         console.log(`✅ Loaded ${response.images.length} images from API`);
       } else {
@@ -186,7 +183,7 @@ const Gallery: React.FC = () => {
     loadImages();
   };
 
-  const handleSortChange = (sortBy: string) => {
+  const handleSortChange = (sortBy: 'createdAt' | 'title' | 'sortOrder') => {
     setFilters(prev => ({
       ...prev,
       sortBy,
@@ -236,12 +233,12 @@ const Gallery: React.FC = () => {
           <div className="flex items-center space-x-4">
             <select
               value={filters.sortBy}
-              onChange={(e) => handleSortChange(e.target.value)}
+              onChange={(e) => handleSortChange(e.target.value as 'createdAt' | 'title' | 'sortOrder')}
               className="px-3 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
             >
               <option value="createdAt">Date Created</option>
               <option value="title">Title</option>
-              <option value="size">File Size</option>
+              <option value="sortOrder">Sort Order</option>
             </select>
 
             <Badge variant="info">

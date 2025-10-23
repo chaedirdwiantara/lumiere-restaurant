@@ -39,6 +39,7 @@ export interface GalleryImage {
   sort_order: number;
   is_featured: boolean;
   uploaded_by?: string;
+  image_variants?: ImageVariant[];
   created_at: Date;
   updated_at: Date;
 }
@@ -76,18 +77,32 @@ export interface ImageVariant {
   width?: number;
   height?: number;
   file_size?: number;
+  size?: number;
+  format?: string;
+  buffer?: Buffer;
   created_at: Date;
 }
 
 // Home Content Types
 export interface HomeContent {
   id: string;
+  section_key: string;
+  title?: string;
+  subtitle?: string;
+  content?: string;
+  image_url?: string;
+  button_text?: string;
+  button_url?: string;
+  metadata?: Record<string, any>;
+  is_active: boolean;
+  display_order: number;
   hero_title?: string;
   hero_subtitle?: string;
   hero_image_url?: string;
-  featured_content: FeaturedContent[];
-  seo_meta: SEOMeta;
+  featured_content?: FeaturedContent[];
+  seo_meta?: SEOMeta;
   updated_by?: string;
+  created_at: Date;
   updated_at: Date;
 }
 
@@ -170,18 +185,24 @@ export interface ProcessedImage {
     width: number;
     height: number;
     size: number;
+    format: string;
+    buffer: Buffer;
   };
   optimized?: {
     url: string;
     width: number;
     height: number;
     size: number;
+    format: string;
+    buffer: Buffer;
   };
   thumbnail: {
     url: string;
     width: number;
     height: number;
     size: number;
+    format: string;
+    buffer: Buffer;
   };
   variants: ImageVariant[];
 }
