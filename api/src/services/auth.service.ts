@@ -12,7 +12,7 @@ export class AuthService {
   /**
    * Authenticate admin user with email and password
    */
-  async login(credentials: LoginCredentials): Promise<AuthTokens> {
+  async login(credentials: LoginCredentials): Promise<{ admin: Admin; accessToken: string; refreshToken: string }> {
     try {
       const { email, password } = credentials;
 
@@ -50,7 +50,13 @@ export class AuthService {
         email: admin.email 
       });
 
-      return tokens;
+      // Return admin data along with tokens
+      const { password_hash, ...adminData } = admin;
+      return {
+        admin: adminData,
+        accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken
+      };
     } catch (error) {
       if (error instanceof AuthenticationError) {
         throw error;

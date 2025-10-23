@@ -19,7 +19,7 @@ export class AuthController {
       }
 
       // Authenticate admin
-      const tokens = await authService.login({ email, password });
+      const result = await authService.login({ email, password });
 
       logger.info('Admin login successful', { 
         email
@@ -28,7 +28,7 @@ export class AuthController {
       res.status(200).json({
         success: true,
         message: 'Login successful',
-        data: tokens
+        data: result
       });
     } catch (error) {
       if (error instanceof ValidationError) {

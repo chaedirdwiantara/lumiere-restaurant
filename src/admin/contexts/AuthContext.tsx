@@ -54,18 +54,28 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const data = await response.json();
       console.log('🔥 AuthContext: Login response:', data);
 
+      // Check if response has the expected structure
+      if (!data.success || !data.data) {
+        throw new Error('Invalid response structure');
+      }
+
       // Set admin data - fix structure based on actual response
       const adminData: Admin = {
-        id: data.data.admin.id,
-        email: data.data.admin.email,
-        name: data.data.admin.name || 'Admin',
-        role: data.data.admin.role || 'admin'
+        id: data.data.admin?.id || '',
+        email: data.data.admin?.email || '',
+        name: data.data.admin?.name || 'Admin',
+        role: data.data.admin?.role || 'admin'
       };
+
+      // Validate that we have required admin data
+      if (!adminData.id || !adminData.email) {
+        throw new Error('Invalid admin data received');
+      }
 
       setAdmin(adminData);
       
       // Store tokens in the format that authService expects
-      const accessToken = data.data.token || data.data.accessToken;
+      const accessToken = data.data.accessToken;
       const refreshToken = data.data.refreshToken;
       
       if (accessToken) {
