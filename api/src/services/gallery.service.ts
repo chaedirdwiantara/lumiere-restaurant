@@ -348,7 +348,8 @@ export class GalleryService {
             width: 800, // Default dimensions
             height: 600,
             size: file.size,
-            format: file.mimetype?.split('/')[1] || 'jpeg'
+            format: file.mimetype?.split('/')[1] || 'jpeg',
+            url: ''
           },
           variants: [] // Empty variants - will use original for all sizes
         };
@@ -464,7 +465,8 @@ export class GalleryService {
           width: 800, // Default dimensions
           height: 600,
           size: file.size,
-          format: 'jpeg'
+          format: 'jpeg',
+          url: ''
         },
         variants: [] // Empty variants array when processing fails
       };
