@@ -4,9 +4,10 @@ import path from 'path';
 // Load environment variables
 dotenv.config({ path: path.join(__dirname, '../../.env') });
 
+// Server configuration
 export const config = {
   app: {
-    port: parseInt(process.env.PORT || '5000', 10),
+    port: 5000,
     nodeEnv: process.env.NODE_ENV || 'development',
     apiPrefix: process.env.API_PREFIX || '/api'
   },
@@ -31,24 +32,23 @@ export const config = {
     credentials: process.env.CORS_CREDENTIALS === 'true'
   },
   
+  // Upload
   upload: {
-    maxFileSize: parseInt(process.env.MAX_FILE_SIZE || '10485760', 10), // 10MB default
-    allowedFileTypes: process.env.ALLOWED_FILE_TYPES 
-      ? process.env.ALLOWED_FILE_TYPES.split(',').map(type => type.trim())
-      : ['image/jpeg', 'image/png', 'image/webp'],
-    uploadPath: process.env.UPLOAD_PATH || 'uploads',
-    imageQuality: parseInt(process.env.IMAGE_QUALITY || '85', 10),
-    thumbnailSize: parseInt(process.env.THUMBNAIL_SIZE || '300', 10),
-    mediumSize: parseInt(process.env.MEDIUM_SIZE || '800', 10),
-    largeSize: parseInt(process.env.LARGE_SIZE || '1200', 10)
+    maxFileSize: 10485760, // 10MB
+    allowedFileTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/gif'],
+    uploadPath: 'uploads',
+    imageQuality: 85,
+    thumbnailSize: 300,
+    mediumSize: 800,
+    largeSize: 1200
   },
   
   security: {
-    bcryptRounds: parseInt(process.env.BCRYPT_ROUNDS || '12', 10),
-    rateLimitWindow: parseInt(process.env.RATE_LIMIT_WINDOW || '900000', 10), // 15 minutes
-    rateLimitMax: parseInt(process.env.RATE_LIMIT_MAX || '100', 10),
-    authRateLimitWindow: parseInt(process.env.AUTH_RATE_LIMIT_WINDOW || '900000', 10), // 15 minutes
-    authRateLimitMax: parseInt(process.env.AUTH_RATE_LIMIT_MAX || '5', 10)
+    bcryptRounds: 12,
+    rateLimitWindow: 900000, // 15 minutes
+    rateLimitMax: 100,
+    authRateLimitWindow: 900000, // 15 minutes
+    authRateLimitMax: 5
   },
   
   logging: {
