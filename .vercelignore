@@ -10,5 +10,9 @@ build
 .env.test.local
 .env.production.local
 
-# Ignore API directory completely for frontend-only deployment
-api/
+# Ignore API source files but keep serverless functions
+api/src/
+api/package.json
+api/package-lock.json
+api/tsconfig.json
+api/.env.example
