@@ -123,7 +123,7 @@ app.get('/health', (req, res) => {
     data: {
       status: 'healthy',
       timestamp: new Date().toISOString(),
-      version: process.env.npm_package_version || '1.0.0',
+      version: process.env.npm_package_version ? process.env.npm_package_version : '1.0.0',
       environment: config.app.nodeEnv,
       uptime: process.uptime()
     }

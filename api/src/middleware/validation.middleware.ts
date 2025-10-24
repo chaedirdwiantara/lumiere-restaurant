@@ -162,14 +162,14 @@ export const validateFileUpload = (req: Request, res: Response, next: NextFuncti
     }
     
     // Validate file size (already handled by multer, but double-check)
-    const maxSize = parseInt(process.env.MAX_FILE_SIZE || '10485760'); // 10MB default
+    const maxSize = parseInt(process.env.MAX_FILE_SIZE ? process.env.MAX_FILE_SIZE : '10485760'); // 10MB default
     const fileSize = typeof file.size === 'number' ? file.size : 0;
     if (fileSize > maxSize) {
       throw new ValidationError(`File size exceeds maximum allowed size of ${maxSize} bytes`);
     }
     
     // Validate file type
-    const allowedTypes = (process.env.ALLOWED_FILE_TYPES || 'image/jpeg,image/png,image/webp').split(',');
+    const allowedTypes = (process.env.ALLOWED_FILE_TYPES ? process.env.ALLOWED_FILE_TYPES : 'image/jpeg,image/png,image/webp').split(',');
     const fileMimetype = typeof file.mimetype === 'string' ? file.mimetype : '';
     if (!allowedTypes.includes(fileMimetype)) {
       throw new ValidationError(`File type ${fileMimetype} is not allowed. Allowed types: ${allowedTypes.join(', ')}`);

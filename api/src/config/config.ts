@@ -8,21 +8,21 @@ dotenv.config({ path: path.join(__dirname, '../../.env') });
 export const config = {
   app: {
     port: 5000,
-    nodeEnv: process.env.NODE_ENV || 'development',
-    apiPrefix: process.env.API_PREFIX || '/api'
+    nodeEnv: process.env.NODE_ENV ? process.env.NODE_ENV : 'development',
+    apiPrefix: process.env.API_PREFIX ? process.env.API_PREFIX : '/api'
   },
   
   supabase: {
-    url: process.env.SUPABASE_URL || '',
-    anonKey: process.env.SUPABASE_ANON_KEY || '',
-    serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+    url: process.env.SUPABASE_URL ? process.env.SUPABASE_URL : '',
+    anonKey: process.env.SUPABASE_ANON_KEY ? process.env.SUPABASE_ANON_KEY : '',
+    serviceRoleKey: process.env.SUPABASE_SERVICE_ROLE_KEY ? process.env.SUPABASE_SERVICE_ROLE_KEY : ''
   },
   
   jwt: {
-    accessTokenSecret: process.env.JWT_ACCESS_SECRET || 'your-super-secret-access-token-key-change-in-production',
-    refreshTokenSecret: process.env.JWT_REFRESH_SECRET || 'your-super-secret-refresh-token-key-change-in-production',
-    accessTokenExpiry: process.env.JWT_ACCESS_EXPIRY || '15m',
-    refreshTokenExpiry: process.env.JWT_REFRESH_EXPIRY || '7d'
+    accessTokenSecret: process.env.JWT_ACCESS_SECRET ? process.env.JWT_ACCESS_SECRET : 'your-super-secret-access-token-key-change-in-production',
+    refreshTokenSecret: process.env.JWT_REFRESH_SECRET ? process.env.JWT_REFRESH_SECRET : 'your-super-secret-refresh-token-key-change-in-production',
+    accessTokenExpiry: process.env.JWT_ACCESS_EXPIRY ? process.env.JWT_ACCESS_EXPIRY : '15m',
+    refreshTokenExpiry: process.env.JWT_REFRESH_EXPIRY ? process.env.JWT_REFRESH_EXPIRY : '7d'
   },
   
   cors: {
@@ -52,14 +52,14 @@ export const config = {
   },
   
   logging: {
-    level: process.env.LOG_LEVEL || 'info',
-    format: process.env.LOG_FORMAT || 'combined',
-    directory: process.env.LOG_DIRECTORY || 'logs'
+    level: process.env.LOG_LEVEL ? process.env.LOG_LEVEL : 'info',
+    format: process.env.LOG_FORMAT ? process.env.LOG_FORMAT : 'combined',
+    directory: process.env.LOG_DIRECTORY ? process.env.LOG_DIRECTORY : 'logs'
   },
   
   admin: {
-    defaultEmail: process.env.DEFAULT_ADMIN_EMAIL || 'admin@luxuryrestaurant.com',
-    defaultPassword: process.env.DEFAULT_ADMIN_PASSWORD || 'Admin123!@#'
+    defaultEmail: process.env.DEFAULT_ADMIN_EMAIL ? process.env.DEFAULT_ADMIN_EMAIL : 'admin@luxuryrestaurant.com',
+    defaultPassword: process.env.DEFAULT_ADMIN_PASSWORD ? process.env.DEFAULT_ADMIN_PASSWORD : 'Admin123!@#'
   }
 };
 

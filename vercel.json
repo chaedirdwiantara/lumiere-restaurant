@@ -2,6 +2,9 @@
   "framework": null,
   "buildCommand": "npm run build:frontend && cd api && npm install && npm run build",
   "outputDirectory": "dist",
+  "env": {
+    "NODE_ENV": "production"
+  },
   "rewrites": [
     {
       "source": "/api/(.*)",

@@ -61,7 +61,7 @@ export const devCorsMiddleware = cors({
  * Get appropriate CORS middleware based on environment
  */
 export const getCorsMiddleware = () => {
-  const nodeEnv = process.env.NODE_ENV || 'development';
+  const nodeEnv = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
   
   if (nodeEnv === 'development') {
     logger.info('Using development CORS configuration (permissive)');

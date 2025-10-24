@@ -24,7 +24,7 @@ winston.addColors(colors);
 
 // Define which level to log based on environment
 const level = () => {
-  const env = process.env.NODE_ENV || 'development';
+  const env = process.env.NODE_ENV ? process.env.NODE_ENV : 'development';
   const isDevelopment = env === 'development';
   return isDevelopment ? 'debug' : 'warn';
 };
@@ -54,7 +54,7 @@ const transports = [
   
   // File transport for errors
   new winston.transports.File({
-    filename: path.join(process.env.LOG_DIRECTORY || 'logs', 'error.log'),
+    filename: path.join(process.env.LOG_DIRECTORY ? process.env.LOG_DIRECTORY : 'logs', 'error.log'),
     level: 'error',
     format: winston.format.combine(
       winston.format.timestamp(),
@@ -67,7 +67,7 @@ const transports = [
   
   // File transport for all logs
   new winston.transports.File({
-    filename: path.join(process.env.LOG_DIRECTORY || 'logs', 'combined.log'),
+    filename: path.join(process.env.LOG_DIRECTORY ? process.env.LOG_DIRECTORY : 'logs', 'combined.log'),
     format: winston.format.combine(
       winston.format.timestamp(),
       winston.format.errors({ stack: true }),
