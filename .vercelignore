@@ -5,3 +5,10 @@ dist
 .trae
 .log
 .figma
+
+# Ignore API source files to prevent analysis errors
+api/src/
+api/tsconfig.json
+
+# Keep only the built API files
+!api/dist/
