@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import { galleryController } from '../controllers/gallery.controller';
 import { authenticateToken, optionalAuth } from '../middleware/auth.middleware';
 import { uploadSingle, handleUploadError } from '../middleware/upload.middleware';
@@ -285,7 +285,7 @@ router.post('/images',
   authenticateToken,
   uploadSingle,
   handleUploadError,
-  async (req, res, next) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
       await galleryController.uploadImage(req, res);
     } catch (error) {

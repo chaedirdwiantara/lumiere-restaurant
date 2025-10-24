@@ -24,7 +24,7 @@ router.get('/db', async (req, res) => {
       });
     }
 
-    res.json({
+    return res.json({
       success: true,
       message: 'Database connection successful',
       data: {
@@ -34,7 +34,7 @@ router.get('/db', async (req, res) => {
     });
   } catch (error) {
     logger.error('Database test error', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: 'Database test failed',
       details: error instanceof Error ? error.message : 'Unknown error'
@@ -63,7 +63,7 @@ router.get('/admin/:email', async (req, res) => {
       });
     }
 
-    res.json({
+    return res.json({
       success: true,
       data: {
         id: admin.id,
@@ -78,7 +78,7 @@ router.get('/admin/:email', async (req, res) => {
     });
   } catch (error) {
     logger.error('Admin test error', error);
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: 'Admin test failed',
       details: error instanceof Error ? error.message : 'Unknown error'

@@ -337,7 +337,7 @@ export class GalleryService {
         });
       } catch (sharpError) {
         logger.error('Sharp processing failed, attempting to use original image as fallback', {
-          error: sharpError.message,
+          error: sharpError instanceof Error ? sharpError.message : 'Unknown error',
           filename: file.originalname
         });
         
@@ -428,25 +428,25 @@ export class GalleryService {
         variantCount: Object.keys(variants).length,
         variants: Object.keys(variants).map(key => ({
           type: key,
-          size: variants[key].size
+          size: variants[key]?.size
         }))
       });
 
       return {
         original: {
           buffer: file.buffer,
-          width: metadata.width || 0,
-          height: metadata.height || 0,
+          width: metadata?.width || 0,
+          height: metadata?.height || 0,
           size: file.size,
-          format: metadata.format || 'jpeg',
+          format: metadata?.format || 'jpeg',
           url: ''
         },
         variants
       };
     } catch (sharpError) {
       logger.error('Image processing error', {
-        error: sharpError.message,
-        stack: sharpError.stack,
+        error: sharpError instanceof Error ? sharpError.message : 'Unknown error',
+        stack: sharpError instanceof Error ? sharpError.stack : undefined,
         filename: file?.originalname,
         fileSize: file?.size,
         mimetype: file?.mimetype,
@@ -485,7 +485,7 @@ export class GalleryService {
   }> {
     try {
       const timestamp = Date.now();
-      const baseName = originalName.split('.')[0].replace(/[^a-zA-Z0-9]/g, '_');
+      const baseName = originalName?.split('.')[0]?.replace(/[^a-zA-Z0-9]/g, '_') || 'image';
       const results: any = { variants: {} };
 
       logger.info('Starting storage upload', {
