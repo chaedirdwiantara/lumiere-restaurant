@@ -288,6 +288,10 @@ export class GalleryService {
       throw new FileUploadError('No file provided');
     }
 
+    if (!file.buffer) {
+      throw new FileUploadError('No file buffer provided - this may be a serverless environment issue');
+    }
+
     if (file.size > this.maxFileSize) {
       throw new FileUploadError(`File size exceeds maximum limit of ${this.maxFileSize / 1024 / 1024}MB`);
     }
@@ -296,6 +300,18 @@ export class GalleryService {
     if (!fileExtension || !this.allowedFormats.includes(fileExtension)) {
       throw new FileUploadError(`Invalid file format. Allowed formats: ${this.allowedFormats.join(', ')}`);
     }
+
+    // Additional validation for serverless environments
+    if (file.buffer.length === 0) {
+      throw new FileUploadError('Empty file buffer - upload may have failed');
+    }
+
+    logger.info('File validation passed', {
+      filename: file.originalname,
+      size: file.size,
+      bufferLength: file.buffer.length,
+      mimetype: file.mimetype
+    });
   }
 
   /**

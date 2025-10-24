@@ -4,6 +4,13 @@ import { authenticateToken } from '../src/middleware/auth.middleware';
 import { uploadSingle, handleUploadError } from '../src/middleware/upload.middleware';
 import { corsMiddleware } from '../src/middleware/vercel-cors.middleware';
 
+// Disable body parser for file uploads
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Apply CORS
   await corsMiddleware(req, res);
@@ -33,10 +40,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
       });
 
-      // Apply upload middleware
+      // Apply upload middleware with proper error handling for Vercel
       await new Promise<void>((resolve, reject) => {
         uploadSingle(req as any, res as any, (err: any) => {
           if (err) {
+            console.error('Upload middleware error:', err);
             handleUploadError(err, req as any, res as any, reject);
           } else {
             resolve();
