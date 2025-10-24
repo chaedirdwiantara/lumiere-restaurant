@@ -2,11 +2,6 @@
   "framework": null,
   "buildCommand": "npm run build:frontend && cd api && npm install && npm run build",
   "outputDirectory": "dist",
-  "functions": {
-    "api/**/*.ts": {
-      "runtime": "nodejs18.x"
-    }
-  },
   "rewrites": [
     {
       "source": "/api/(.*)",
