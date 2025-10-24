@@ -2,22 +2,7 @@
   "version": 2,
   "buildCommand": "npm run build:frontend",
   "outputDirectory": "dist",
-  "functions": {
-    "api/auth/*.ts": {
-      "maxDuration": 30
-    },
-    "api/gallery/*.ts": {
-      "maxDuration": 30
-    },
-    "api/home/*.ts": {
-      "maxDuration": 30
-    }
-  },
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
-    },
     {
       "source": "/(.*)",
       "destination": "/index.html"
