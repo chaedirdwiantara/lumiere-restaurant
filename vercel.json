@@ -3,7 +3,13 @@
   "buildCommand": "npm run build:frontend",
   "outputDirectory": "dist",
   "functions": {
-    "api/**/*.ts": {
+    "api/auth/*.ts": {
+      "maxDuration": 30
+    },
+    "api/gallery/*.ts": {
+      "maxDuration": 30
+    },
+    "api/home/*.ts": {
       "maxDuration": 30
     }
   },
