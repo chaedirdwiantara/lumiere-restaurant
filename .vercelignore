@@ -1,14 +1,14 @@
 node_modules
 build
-dist
 .git
 .trae
 .log
 .figma
+*.log
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# Ignore API source files to prevent analysis errors
-api/src/
-api/tsconfig.json
-
-# Keep only the built API files
-!api/dist/
+# Ignore API directory completely for frontend-only deployment
+api/

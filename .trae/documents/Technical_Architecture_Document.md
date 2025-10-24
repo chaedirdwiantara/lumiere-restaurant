@@ -38,11 +38,11 @@ graph TD
 
 ## 2. Technology Description
 
-* Frontend: Next.js@14 + TypeScript + Tailwind CSS@3 + GSAP@3.12 + Lenis@1.0
+* Frontend: Next.js\@14 + TypeScript + Tailwind CSS\@3 + GSAP\@3.12 + Lenis\@1.0
 
-* Backend: Strapi@4 (Headless CMS)
+* Backend: Strapi\@4 (Headless CMS)
 
-* Database: PostgreSQL@15
+* Database: PostgreSQL\@15
 
 * Image Storage: Cloudinary or AWS S3
 
@@ -55,20 +55,30 @@ graph TD
 ### Animation Technology Stack
 
 * **GSAP (GreenSock Animation Platform)**: Primary animation library for all UI animations
-  - ScrollTrigger plugin for scroll-based animations
-  - Timeline-based animations for complex sequences
-  - Custom cursor follower animations
-  - Parallax effects and smooth transitions
+
+  * ScrollTrigger plugin for scroll-based animations
+
+  * Timeline-based animations for complex sequences
+
+  * Custom cursor follower animations
+
+  * Parallax effects and smooth transitions
 
 * **Lenis**: Smooth scrolling library for enhanced user experience
-  - Hardware-accelerated smooth scrolling
-  - Integration with GSAP ScrollTrigger
-  - Custom scroll behavior and momentum
 
-* **Custom Animation Hooks**: 
-  - `useScrollAnimations`: GSAP-based scroll animations
-  - `useLenis`: Smooth scrolling integration
-  - Custom animation utilities for consistent motion design
+  * Hardware-accelerated smooth scrolling
+
+  * Integration with GSAP ScrollTrigger
+
+  * Custom scroll behavior and momentum
+
+* **Custom Animation Hooks**:
+
+  * `useScrollAnimations`: GSAP-based scroll animations
+
+  * `useLenis`: Smooth scrolling integration
+
+  * Custom animation utilities for consistent motion design
 
 ## 3. Route Definitions
 
