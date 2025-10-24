@@ -36,7 +36,7 @@ export interface GalleryImage {
   mime_type?: string;
   width?: number;
   height?: number;
-  sort_order: number;
+  display_order: number;
   is_featured: boolean;
   uploaded_by?: string;
   image_variants?: ImageVariant[];
@@ -55,7 +55,7 @@ export interface GalleryImageCreateInput {
   mime_type?: string;
   width?: number;
   height?: number;
-  sort_order?: number;
+  display_order?: number;
   is_featured?: boolean;
   uploaded_by?: string;
 }
@@ -64,7 +64,7 @@ export interface GalleryImageUpdateInput {
   title?: string;
   description?: string;
   alt_text?: string;
-  sort_order?: number;
+  display_order?: number;
   is_featured?: boolean;
 }
 
